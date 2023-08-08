@@ -137,7 +137,10 @@ def add_hub(territory_index):
             if number_of_hubs > 0:
                 territories[territory_index]["hubs"].append({'type': hub_type, 'count': number_of_hubs, **hub_types[hub_type], 'employed_workers': 0})
                 if hub_type == "Resource Hub":
-                    production = resource_planets[territories[territory_index]["location"]] or ("Metals", 20)
+                    if territories[territory_index]["location"] not in resource_planets:
+                        production = (METAL, 20)
+                    else:
+                        production = resource_planets[territories[territory_index]["location"]]
                     territories[territory_index]["hubs"][-1]['produces'].append(production)
 
         st.session_state.territories = territories
@@ -318,6 +321,13 @@ def display_total_capex():
         for hub in territory['hubs']:
             total_capex += hub['cost'] * hub['count']
     st.write(f"### Total IP expenditure: {total_capex}")
+    
+def fill_all_jobs():
+    for territory in st.session_state.territories:
+        for hub in territory['hubs']:
+            max_workers = sum([worker[1] for worker in hub['workers']]) * hub['count']
+            hub['employed_workers'] = max_workers
+    st.experimental_rerun()
 
 
 st.set_page_config(page_title="Econ Dashboard", page_icon="📈")
@@ -327,13 +337,16 @@ st.sidebar.header("Econ Dashboard")
 st.write(
     """This the econ dashboard for the Coldest War game."""
 )
-# Example usage in your main code
-if st.button("Save State to Text"):
-    save_to_text()
 
-if st.button("Load State from Text"):
-    load_from_text()
+with st.sidebar:
+    if st.button("Save State to Text"):
+        save_to_text()
 
+    if st.button("Load State from Text"):
+        load_from_text()
+
+if st.button("Fill All Jobs"):
+    fill_all_jobs()
 
 
 if 'territories' not in st.session_state:
