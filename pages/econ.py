@@ -76,14 +76,18 @@ INFRA = {
 
 # Function to save the current state to a text area
 def save_to_text():
+    st.write("### Export")
     if 'territories' not in st.session_state:
         st.error("No state to save. Please add a territory first.")
         return
-    state_str = json.dumps(st.session_state.territories)
-    st.text_area("Copy the text below to save your current state:", value=state_str, height=100)
+    if st.button("Export"):
+        st.write("Copy the text below to save your state.")
+        state_str = json.dumps(st.session_state.territories)
+        st.text_area("State", value=state_str, height=100)
 
 # Function to load the state from a text input
 def load_from_text():
+    st.write("### Import")
     state_str = st.text_area("Paste the previously saved text below to load your state:", height=100)
     if st.button("Load State"):
         try:
@@ -339,11 +343,8 @@ st.write(
 )
 
 with st.sidebar:
-    if st.button("Save State to Text"):
-        save_to_text()
-
-    if st.button("Load State from Text"):
-        load_from_text()
+    save_to_text()
+    load_from_text()
 
 if st.button("Fill All Jobs"):
     fill_all_jobs()
