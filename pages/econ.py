@@ -141,7 +141,7 @@ def add_hub(territory_index):
             if number_of_hubs > 0:
                 territories[territory_index]["hubs"].append({'type': hub_type, 'count': number_of_hubs, **hub_types[hub_type], 'employed_workers': 0})
                 if hub_type == "Resource Hub":
-                    if territories[territory_index]["location"] not in resource_planets:
+                    if territories[territory_index]["location"] not in resource_planets.keys():
                         production = (METAL, 20)
                     else:
                         production = resource_planets[territories[territory_index]["location"]]
