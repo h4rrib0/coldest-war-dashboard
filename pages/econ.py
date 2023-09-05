@@ -104,7 +104,7 @@ def new_territory():
     with st.expander("Add Territory"):
         st.write("### Add Territory")
         name = st.text_input("Name", key="territory_name")
-        location = st.radio("Location", ["Earth", "Luna", "Mercury", "Mars", "Jupiter", "Belt"])
+        location = st.radio("Location", ["Earth", "Luna", "Mercury",  "Venus", "Mars", "Jupiter", "Belt"])
 
         if st.button("Add Territory"):
             territories = st.session_state.territories
