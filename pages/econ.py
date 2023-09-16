@@ -84,6 +84,25 @@ def save_to_text():
         st.write("Copy the text below to save your state.")
         state_str = json.dumps(st.session_state.territories)
         st.text_area("State", value=state_str, height=100)
+        
+def export_to_human_readable():
+    st.write("### Export to Human Readable")
+    if 'territories' not in st.session_state:
+        st.error("No state to save. Please add a territory first.")
+        return
+    if st.button("Export Human Readable"):
+        displaystring = ""
+        for territory in st.session_state.territories:
+            territorystring = f"Territory: {territory['name']} ({territory['location']})\n"
+            for key in INFRA:
+                if key in territory['infrastructure']:
+                    territorystring += f"\t{key}: {territory['infrastructure'][key]}\n"
+            for hub in territory['hubs']:
+                hubstring = f"\t{hub['count']}x {hub['type']}\n"
+                territorystring += hubstring
+            displaystring += territorystring
+            displaystring += "\n"
+        st.text_area("HumanReadable", value=displaystring, height=100)
 
 # Function to load the state from a text input
 def load_from_text():
@@ -345,6 +364,7 @@ st.write(
 with st.sidebar:
     save_to_text()
     load_from_text()
+    export_to_human_readable()
 
 if st.button("Fill All Jobs"):
     fill_all_jobs()
